@@ -1,0 +1,4 @@
+# Глобальные переменные
+password = "a270820011430A"
+base_email = "zilotin164+123456@gmail.com"
+base_url = 'https://www.istockphoto.com/ru/'
