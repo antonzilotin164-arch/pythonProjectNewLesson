@@ -1,27 +1,52 @@
 from selenium import webdriver
+from selenium.common import TimeoutException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from base.globalVariables import base_url
 from selenium.webdriver.support import expected_conditions as EC
+import unittest
 
-class DriverInitialization():
-    def initialization(self):
-        # Инициализация опций для Chrome
-        options = webdriver.ChromeOptions()
-        options.add_argument("--incognito")  # Запуск в режиме инкогнито
-        options.add_experimental_option("detach", True)  # Оставить браузер открытым после завершения скрипта
 
-        # Инициализация драйвера с опциями
-        driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
-        # Вход на сайт
-        # base_url = 'https://www.saucedemo.com/'
-        driver.get(base_url)
-        driver.maximize_window()
+def initialization():
+    # Инициализация опций для Chrome
+    options = webdriver.ChromeOptions()
+    options.add_argument("--incognito")  # Запуск в режиме инкогнито
 
-        return driver
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--start-maximized")
+    options.add_argument("--log-level=3")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-infobars")
+    options.add_argument("--disable-notifications")
+    options.add_argument('ignore-certificate-errors')
 
-    @staticmethod
-    def wait_element(driver, locator, timeout=30):
-        return WebDriverWait(driver, timeout).until(EC.presence_of_element_located(locator))
+    # options.add_experimental_option("detach", True)  # Оставить браузер открытым после завершения скрипта
+
+    # Инициализация драйвера с опциями
+    driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
+    driver.get(base_url)
+    # driver.maximize_window()
+
+    return driver
+
+
+def stop_driver(self):
+    self.close()
+    self.quit()
+
+
+class Steps(unittest.TestCase):
+    def get_address(self, driver, address):
+        try:
+            driver.get(address)
+            pass
+        except TimeoutException:
+            stop_driver(driver)
+            self.fail("Exception while trying to connect to " + address)
+
+
+@staticmethod
+def wait_element(driver, locator, timeout=30):
+    return WebDriverWait(driver, timeout).until(EC.presence_of_element_located(locator))
 
