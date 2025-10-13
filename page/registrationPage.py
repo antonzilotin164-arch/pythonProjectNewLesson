@@ -20,40 +20,49 @@ class RegistrationPage:
         email = email_factory()
         if not email:
             print("Ошибка генерации email")
-            return False
+            return None
 
         self.used_email = email  # Сохраняем email для последующего использования
 
         # Ввод данных пользователя
         if not validate_email(email):
             print("Ошибка валидации")
-            return False
+            return None
 
-    # Что структурирует тесты? Именно это. Это и есть тест, он должен быть в test_registration
+        return email
+
+    def enter_email(self, email):
         # Ввод email
         button_email = wait_element(self.driver, LocatorsRegistrationPage.button_email_locator)
         button_email.send_keys(email)
 
+    def enter_password(self, password):
         # Ввод пароля
         button_password = wait_element(self.driver, LocatorsRegistrationPage.button_password_locator)
         button_password.send_keys(password)
 
+    def enter_password_confirm(self, confirmation):
         # Подтверждение пароля
         button_confirmation = wait_element(self.driver, LocatorsRegistrationPage.button_confirmation_locator)
-        button_confirmation.send_keys(password)
+        button_confirmation.send_keys(confirmation)
 
+    def registration_click(self):
         # Нажатие кнопки регистрации
         button_regist = wait_element(self.driver, LocatorsRegistrationPage.button_regist_locator)
         button_regist.click()
 
-        # Это 4 метода, каждый является тестовым шагом для test_registration
-        return True
+    def check_user_not_existing(self):
 
-    def check_existing_user_error(self):
-        """Проверка на сообщение о существующем пользователе"""
         try:
-            error_message = wait_element(self.driver, LocatorsRegistrationPage.error_locator, timeout=5)
-            print("Пользователь уже существует!")
+            wait_element(self.driver, LocatorsRegistrationPage.error_existing, timeout=5)
+            return False
+        except TimeoutException:
+            return True
+
+    def check_password_match(self):
+
+        try:
+            wait_element(self.driver, LocatorsRegistrationPage.error_confirmation_not_match, timeout=5)
             return True
         except TimeoutException:
             return False

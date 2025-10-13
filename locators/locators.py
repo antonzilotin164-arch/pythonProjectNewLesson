@@ -16,7 +16,8 @@ class LocatorsRegistrationPage:
     button_confirmation_locator = (By.XPATH, "//input[@id=\"register_password_confirmation\"]")
     button_regist_locator = (By.XPATH, "//button[@id=\"register-button\"]")
     button_accountIcon_locator = (By.XPATH, "//button[@data-testid=\"AccountIcon\"]")
-    error_locator = (By.XPATH, "//*[contains(text(), 'адрес электронной почты уже существует')]")
+    error_existing = (By.XPATH, "//*[contains(text(), 'адрес электронной почты уже существует')]")
+    error_confirmation_not_match = (By.XPATH, "//*[contains(text(), 'Пароли не совпадают — попробуйте еще раз.')]")
 
 
 class LocatorsAddUser:
