@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from base.globalVariables import base_url
 from selenium.webdriver.support import expected_conditions as EC
 import unittest
+import time
 
 
 def initialization():
@@ -55,11 +56,25 @@ def wait_url(driver, timeout=10):
     WebDriverWait(driver, timeout).until(lambda d: d.current_url)
     return driver.current_url
 
+
 @staticmethod
+# def wait_elements(driver, locator, timeout=30):
+#     elements = WebDriverWait(driver, timeout).until(
+#         EC.presence_of_all_elements_located(locator)
+#     )
+#
+#
+#     initial_count = len(elements)
+#     WebDriverWait(driver, 10).until(
+#         lambda d: len(d.find_elements(*locator)) == initial_count
+#     )
+#     return elements
+
 def wait_elements(driver, locator, timeout=30):
     elements = WebDriverWait(driver, timeout).until(
         EC.presence_of_all_elements_located(locator)
     )
-    # Гарантированно ждем 1 секунду
-    WebDriverWait(driver, 1).until(lambda x: True)
+
+    # Ждем 1 секунду после появления элементов
+    time.sleep(1)
     return elements
