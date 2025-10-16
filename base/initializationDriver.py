@@ -50,3 +50,16 @@ class Steps(unittest.TestCase):
 def wait_element(driver, locator, timeout=30):
     return WebDriverWait(driver, timeout).until(EC.presence_of_element_located(locator))
 
+@staticmethod
+def wait_url(driver, timeout=10):
+    WebDriverWait(driver, timeout).until(lambda d: d.current_url)
+    return driver.current_url
+
+@staticmethod
+def wait_elements(driver, locator, timeout=30):
+    elements = WebDriverWait(driver, timeout).until(
+        EC.presence_of_all_elements_located(locator)
+    )
+    # Гарантированно ждем 1 секунду
+    WebDriverWait(driver, 1).until(lambda x: True)
+    return elements

@@ -63,6 +63,7 @@ class RegistrationPage:
 
         try:
             wait_element(self.driver, LocatorsRegistrationPage.error_confirmation_not_match, timeout=5)
+            print("Нашел сообщение о несовпадении паролей")
             return True
         except TimeoutException:
             return False
@@ -70,13 +71,15 @@ class RegistrationPage:
     def check_registration_success(self):
         """Проверка успешной регистрации"""
         try:
-            button_accountIcon = wait_element(self.driver, LocatorsRegistrationPage.button_accountIcon_locator, timeout=10)
+            button_accountIcon = wait_element(self.driver, LocatorsRegistrationPage.button_accountIcon_locator, timeout=5)
             print("Регистрация успешна!")
             print(f"Пользователь {self.used_email} зарегистрирован!")
             return True
         except TimeoutException:
             print("Сбой регистрации - элемент не найден")
             return False
+
+
 
 
 

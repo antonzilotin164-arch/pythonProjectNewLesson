@@ -17,8 +17,16 @@ class LocatorsRegistrationPage:
     button_regist_locator = (By.XPATH, "//button[@id=\"register-button\"]")
     button_accountIcon_locator = (By.XPATH, "//button[@data-testid=\"AccountIcon\"]")
     error_existing = (By.XPATH, "//*[contains(text(), 'адрес электронной почты уже существует')]")
-    error_confirmation_not_match = (By.XPATH, "//*[contains(text(), 'Пароли не совпадают — попробуйте еще раз.')]")
-
+    #Найти причину !!!
+    error_confirmation_not_match = (By.XPATH, "//*[contains(text(), 'Пароли не совпадают')]")
+    # error_confirmation_not_match = (By.XPATH, "//*[contains(text(), 'Пароли не совпадают')]")
 
 class LocatorsAddUser:
     error_locator = (By.XPATH, "//*[contains(text(), 'адрес электронной почты уже существует')]")
+
+class LocatorsMainPage:
+    search_field = (By.XPATH, "//div[@data-testid=\"container-search-box\"]")
+    input_field = (By.XPATH, "//input[@aria-label=\"text\"]")
+    list_query = (By.XPATH, "//ul[@data-testid=\"suggestions-list\"]")
+    value_field = (By.XPATH, "//input[@data-testid=\"container-search-box-input\"]")
+    list_items = (By.XPATH, "//ul[@data-testid='suggestions-list']/li")
