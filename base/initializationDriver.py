@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from base.globalVariables import base_url
 from selenium.webdriver.support import expected_conditions as EC
 import unittest
+import urllib.parse
 import time
 
 
@@ -78,3 +79,14 @@ def wait_elements(driver, locator, timeout=30):
     # Ждем 1 секунду после появления элементов
     time.sleep(1)
     return elements
+
+@staticmethod
+def check_current_url(driver, basis_current_url, add_value_url):
+    wait_url(driver, timeout=10)
+    get_current_url = driver.current_url
+    encoded_add_value_url = urllib.parse.quote(add_value_url)
+    factory_current_url = basis_current_url + encoded_add_value_url
+    if get_current_url == factory_current_url:
+        return True
+    else:
+        return False

@@ -1,13 +1,6 @@
-import time
-
-from selenium.common import TimeoutException
 from selenium.webdriver import Keys
-import urllib.parse
-from locators.locators import LocatorsRegistrationPage, LocatorsMainPage
-from utilities.fileOperations import email_factory, save_email
-from utilities.validation import validate_email
-from base.globalVariables import password
-from base.globalVariables import search_value, basis_current_url
+from locators.locators import LocatorsMainPage
+from base.globalVariables import search_value, basis_current_url_for_page_search_image, add_value_url_for_search_image
 from base.initializationDriver import *
 
 class MainPage:
@@ -60,17 +53,27 @@ class MainPage:
         enter_to_search = wait_element(self.driver, LocatorsMainPage.value_field, timeout=10)
         enter_to_search.send_keys(Keys.ENTER)
 
+    # def check_current_url(self):
+    #     wait_url(self.driver, timeout=10)
+    #     get_current_url = self.driver.current_url
+    #     encoded_search_value = urllib.parse.quote(search_value)
+    #     factory_current_url = basis_current_url_for_page_search_image + encoded_search_value
+    #     if get_current_url == factory_current_url:
+    #         print(f"Мы находимся на правильной странице с картиками, которые относятся к поисковому слову {search_value}")
+    #         return True
+    #     else:
+    #         print("Сбой, что-то пошло не так")
+    #         return False
+
     def check_current_url(self):
-        wait_url(self.driver, timeout=10)
-        get_current_url = self.driver.current_url
-        encoded_search_value = urllib.parse.quote(search_value)
-        factory_current_url = basis_current_url + encoded_search_value
-        if get_current_url == factory_current_url:
+        result = check_current_url(self.driver, basis_current_url_for_page_search_image, add_value_url_for_search_image)
+        if result:
             print(f"Мы находимся на правильной странице с картиками, которые относятся к поисковому слову {search_value}")
-            return True
+            return result
         else:
             print("Сбой, что-то пошло не так")
-            return False
+            return result
+
 
 
 
