@@ -45,8 +45,30 @@ class LocatorsPlansAndPrisesPage():
     one_price_per_download = (By.XPATH, "//span[@class=\"OJ6pnWemrAYRGpoE5DOQ\"]")
     month_tariff = (By.XPATH, "//div[@data-testid=\"duration-toggle-monthly-label\"]")
 
+class LocatorsCreditPlans:
+    credit_plans = (By.XPATH, "//button[@data-cy=\"purchase-credit-pack-products-button\"]")
+    value_credit_plans = (By.XPATH, "//div[@class=\"FMG9dWyvhcjaBKsiuTFH\"]")
+    price_credit_plans = (By.XPATH, "//div[@class=\"isJqeFX9eBGzmmrUHFKk\"]")
+    discount = (By.XPATH, "//span[@class=\"RC2AcXqs7iNaH11G5EPQ\"]")
+
+    @staticmethod
+    def get_one_credit_plan(value):
+        return (By.XPATH, f"//div[@data-testid='credit-pack-panel-{value}']")
+
+    value_credit_button = (By.XPATH, "//a[@data-testid=\"credits-purchase-button\"]")
+
+
+
+
+
 #//button[@data-cy="purchase-credit-pack-products-button"]
 # button_subscribe = (By.XPATH, "//button[@data-cy=\"purchase-subscription-products-button\"]")
 #checkbox
 # //span[@class="R1O7RSoTnvXjtRzukQT3"] - цена в долларах второй этап
 # //li[@data-testid="nav-pricing"]
+
+
+# //div[@class="isJqeFX9eBGzmmrUHFKk"] - $5 USD
+# //div[@class="FMG9dWyvhcjaBKsiuTFH"] - 1 кредит, 3 кредита/ов...
+# //span[@class="RC2AcXqs7iNaH11G5EPQ"] - экономия...
+# //a[@data-testid="credits-purchase-button"]

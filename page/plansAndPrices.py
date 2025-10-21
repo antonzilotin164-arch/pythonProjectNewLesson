@@ -2,6 +2,7 @@ import re
 from locators.locators import LocatorsPlansAndPrisesPage, LocatorsLoginPage
 from base.globalVariables import add_value_url_for_plans_and_prices, basis_current_url_for_page_plans_and_prises
 from base.initializationDriver import *
+from base.flagActivePage import FlagActivePage
 
 class PlansAndPrices():
     def __init__(self, driver):
@@ -39,7 +40,7 @@ class PlansAndPrices():
             classes = element.get_attribute("class")
 
             # Проверяем есть ли там магический класс
-            if "HUAUGRdSMQE8eTg6ziHQ" in classes:
+            if FlagActivePage.flag_check_active_tariff in classes:
                 print("Выбран режим годового тарифа, это соответствует требованиям")
                 return True
             else:
@@ -170,7 +171,7 @@ class PlansAndPrices():
             classes = element.get_attribute("class")
 
             # Проверяем есть ли там магический класс
-            if "HUAUGRdSMQE8eTg6ziHQ" in classes:
+            if FlagActivePage.flag_check_active_tariff in classes:
                 print("Выбран режим помесячного тарифа")
                 return True
             else:
