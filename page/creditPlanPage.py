@@ -120,34 +120,52 @@ class CreditPlans:
     def get_value_credit_button(self, lst_credit_plans):
         lst_value_credit_button = []
 
-        for i in range(len(lst_credit_plans)):
-            one_credit_plan = wait_element(self.driver, LocatorsCreditPlans.get_one_credit_plan(lst_credit_plans[i]), timeout=10)
+        for credit_value in lst_credit_plans:
+            print(f"Обрабатываем кредитный план: {credit_value}")
 
-            if one_credit_plan:
-                one_credit_plan.click()
-                one_value_credit_button = wait_element(self.driver, LocatorsCreditPlans.value_credit_button, timeout=10)
+            # Находим элемент по значению кредитов
+            one_credit_plan = wait_element(self.driver, LocatorsCreditPlans.get_one_credit_plan(credit_value),
+                                           timeout=10)
 
-                if not one_value_credit_button:
-                    raise Exception(f"Не найден элемент с кнопкой после клика на план с числом {lst_credit_plans[i]}")
+            if not one_credit_plan:
+                raise Exception(f"Не найден элемент для кредитного плана: {credit_value}")
 
-                credit_button_text = one_value_credit_button.text.strip()
-                print(f"Текст элемента: '{credit_button_text}'")
+            # Кликаем на элемент
+            one_credit_plan.click()
+            time.sleep(0.2)  # Даем время для обновления DOM
 
-                # Проверяем несколько возможных форматов
-                credit_match = re.search(r'Купить\s+кредиты:\s*(\d+)', credit_button_text)
-                if not credit_match:
-                    credit_match = re.search(r'Купить\s+(\d+)\s+кредит(?:а|ов)?', credit_button_text)
+            # Ищем кнопку с текущим значением
+            one_value_credit_button = wait_element(self.driver, LocatorsCreditPlans.value_credit_button, timeout=10)
 
-                if credit_match:
-                    credit_value = int(credit_match.group(1))
-                    lst_value_credit_button.append(credit_value)
-                    print(f"Добавлено число: {credit_value}")
-                else:
-                    raise ValueError(
-                        f"Не удалось распознать количество кредитов: '{credit_button_text}'. "
-                        f"Ожидались форматы: 'Купить кредиты: число' или 'Купить число кредит(а/ов)'. "
-                        f"Кнопка: {lst_credit_plans[i]}"
-                    )
+            if not one_value_credit_button:
+                raise Exception(f"Не найден элемент с кнопкой после клика на план с числом {credit_value}")
+
+            credit_button_text = one_value_credit_button.text.strip()
+            print(f"Текст элемента: '{credit_button_text}' для плана {credit_value}")
+
+            # Проверяем несколько возможных форматов
+            credit_match = re.search(r'Купить\s+кредиты:\s*(\d+)', credit_button_text)
+            if not credit_match:
+                credit_match = re.search(r'Купить\s+(\d+)\s+кредит(?:а|ов)?', credit_button_text)
+
+            if credit_match:
+                extracted_value = int(credit_match.group(1))
+                print(f"Извлечено значение: {extracted_value}, ожидалось: {credit_value}")
+
+                # Проверяем, что извлеченное значение соответствует ожидаемому
+                if extracted_value != credit_value:
+                    print(f"ВНИМАНИЕ: Несоответствие! Ожидалось {credit_value}, но найдено {extracted_value}")
+
+                lst_value_credit_button.append(extracted_value)
+            else:
+                raise ValueError(
+                    f"Не удалось распознать количество кредитов: '{credit_button_text}'. "
+                    f"Ожидались форматы: 'Купить кредиты: число' или 'Купить число кредит(а/ов)'. "
+                    f"Кнопка: {credit_value}"
+                )
+
+            # Небольшая пауза между итерациями
+            # time.sleep(0.5)
 
         print(f"Итоговый список кредитов: {lst_value_credit_button}")
         return lst_value_credit_button
