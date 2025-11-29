@@ -57,7 +57,14 @@ class LocatorsCreditPlans:
 
     value_credit_button = (By.XPATH, "//a[@data-testid=\"credits-purchase-button\"]")
 
-
+class LocatorsImagePage():
+    model_generate = (By.XPATH, "//label[@for=\"Leonardo2\"]")
+    selected_model_generate = (By.XPATH, "//span[contains(text(), 'FLUX.1 [pro]')]")
+    descriptions_field = (By.XPATH, "//textarea[@id = \"promptInput\"]")
+    aspect_ratio = (By.XPATH, "//select[@id=\"aspect_ratio\"]")
+    button_generate_image = (By.XPATH, "//button[@id=\"generate\"]")
+    download_button_complet = (By.XPATH, "//button[@id=\"downloadButton\"]")
+    loading_indicator = (By.XPATH, "//div[@id=\"loadingIndicator\"]")
 
 
 

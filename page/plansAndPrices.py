@@ -1,4 +1,6 @@
 import re
+import time
+
 from locators.locators import LocatorsPlansAndPrisesPage, LocatorsLoginPage
 from base.globalVariables import add_value_url_for_plans_and_prices, basis_current_url_for_page_plans_and_prises
 from base.initializationDriver import *

@@ -3,18 +3,19 @@ from selenium.common import TimeoutException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from base.globalVariables import base_url
 from selenium.webdriver.support import expected_conditions as EC
 import unittest
 import urllib.parse
 import time
+from pathlib import Path
 
 
-def initialization():
+def initialization(url, download_dir=None, return_tuple=False):
     # Инициализация опций для Chrome
     options = webdriver.ChromeOptions()
-    options.add_argument("--incognito")  # Запуск в режиме инкогнито
 
+    # Базовые опции
+    options.add_argument("--incognito")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
     options.add_argument("--log-level=3")
@@ -23,19 +24,43 @@ def initialization():
     options.add_argument("--disable-notifications")
     options.add_argument('ignore-certificate-errors')
 
-    # options.add_experimental_option("detach", True)  # Оставить браузер открытым после завершения скрипта
+    # НАСТРОЙКИ СКАЧИВАНИЯ - ТАК РАБОТАЕТ
+    if download_dir is None:
+        download_dir = Path(__file__).parent.parent / "downloads"
 
-    # Инициализация драйвера с опциями
+    # Создаем папку если не существует
+    download_dir.mkdir(parents=True, exist_ok=True)
+
+    prefs = {
+        "download.default_directory": str(download_dir),
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": False,  # ОТКЛЮЧАЕМ безопасный просмотр
+        "profile.default_content_settings.popups": 0,
+    }
+    options.add_experimental_option("prefs", prefs)
+
+    # Отключаем автоматизационные флаги
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+
+    # Инициализация драйвера
     driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
-    driver.get(base_url)
-    # driver.maximize_window()
 
-    return driver
+    # Убираем webdriver флаг
+    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+
+    driver.get(url)
+
+    if return_tuple:
+        return driver, download_dir
+    else:
+        return driver
 
 
-def stop_driver(self):
-    self.close()
-    self.quit()
+def stop_driver(driver):
+    driver.close()
+    driver.quit()
 
 
 class Steps(unittest.TestCase):
@@ -52,6 +77,7 @@ class Steps(unittest.TestCase):
 def wait_element(driver, locator, timeout=30):
     return WebDriverWait(driver, timeout).until(EC.presence_of_element_located(locator))
 
+
 @staticmethod
 def wait_url(driver, timeout=10):
     WebDriverWait(driver, timeout).until(lambda d: d.current_url)
@@ -59,26 +85,13 @@ def wait_url(driver, timeout=10):
 
 
 @staticmethod
-# def wait_elements(driver, locator, timeout=30):
-#     elements = WebDriverWait(driver, timeout).until(
-#         EC.presence_of_all_elements_located(locator)
-#     )
-#
-#
-#     initial_count = len(elements)
-#     WebDriverWait(driver, 10).until(
-#         lambda d: len(d.find_elements(*locator)) == initial_count
-#     )
-#     return elements
-
 def wait_elements(driver, locator, timeout=30):
     elements = WebDriverWait(driver, timeout).until(
         EC.presence_of_all_elements_located(locator)
     )
-
-    # Ждем 1 секунду после появления элементов
     time.sleep(1)
     return elements
+
 
 @staticmethod
 def check_current_url(driver, basis_current_url, add_value_url):
