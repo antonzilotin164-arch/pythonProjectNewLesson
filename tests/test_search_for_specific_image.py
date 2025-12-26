@@ -5,9 +5,9 @@ from page.mainPage import MainPage
 from page.registrationPage import RegistrationPage
 from utilities.fileOperations import save_email, load_all_emails
 from base.initializationDriver import *
-from base.globalVariables import password, search_value
+from base.globalVariables import password, search_value, base_url
 
-driver = initialization()
+driver = initialization(base_url)
 existing_emails = load_all_emails()
 email = random.choice(existing_emails)
 

@@ -1,11 +1,27 @@
+import allure
 from base.globalVariables import request, correct_aspect_ratio
 from locators.locators import LocatorsImagePage
-def test_open_browers(browser_session):
-    #Шаг №1 - переход на ресурс генерации изображения
-    driver, generate_image_page = browser_session
 
-    # Шаг №2 - проверка, что открыт верный ресурс
-    assert generate_image_page.check_current_url()
+
+import pytest
+
+
+
+@allure.feature("Image generation page")
+@allure.story("Smoke")
+@allure.title("Открывается правильный URL")
+def test_open_browser(browser_session):
+    with allure.step("Открыть страницу генерации изображения"):
+        driver, generate_image_page = browser_session
+
+    with allure.step("Проверить, что открыт верный URL"):
+        assert generate_image_page.check_current_url()
+# def test_open_browers(browser_session):
+#     #Шаг №1 - переход на ресурс генерации изображения
+#     driver, generate_image_page = browser_session
+#
+#     # Шаг №2 - проверка, что открыт верный ресурс
+#     assert generate_image_page.check_current_url()
 
 def test_check_model(browser_session):
     # Шаг №1 - переход на ресурс генерации изображения

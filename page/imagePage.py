@@ -4,6 +4,9 @@ from base.initializationDriver import *
 from pathlib import Path
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename='myapp.log', level=logging.INFO)
 class ImagePage():
     def __init__(self, driver):
         self.driver = driver
@@ -11,20 +14,20 @@ class ImagePage():
     def check_current_url(self):
         result = check_current_url(self.driver, base_url_image_page, add_url_image_page)
         if result:
-            print("Мы успешно попали на ресурс генерации изображений")
+            logger.info("Мы успешно попали на ресурс генерации изображений")
             return result
         else:
-            print("Сбой, что-то пошло не так")
+            logger.info("Сбой, что-то пошло не так")
             return result
 
     def check_current_model_generate(self):
         model_generate = wait_element(self.driver, LocatorsImagePage.model_generate, timeout=10)
         css_style_color = model_generate.value_of_css_property("color")
         if css_style_color in ["rgb(255, 255, 255)", "rgba(255, 255, 255, 1)", "#fff", "#ffffff"]:
-            print("Выбрана модель по умолчанию")
+            logger.info("Выбрана модель по умолчанию")
             return True
         else:
-            print("Ошибка выбора модели генерации")
+            logger.info("Ошибка выбора модели генерации")
             return False
 
     def select_model_generate(self):
@@ -35,10 +38,10 @@ class ImagePage():
         check_model = wait_element(self.driver, LocatorsImagePage.selected_model_generate, timeout=10)
         font_weight = check_model.value_of_css_property("font-weight")
         if font_weight in ["bold", "700", "600"]:
-            print("Модель выбрана верно")
+            logger.info("Модель выбрана верно")
             return True
         else:
-            print(f"Модель выбрана неверно")
+            logger.info(f"Модель выбрана неверно")
             return False
 
     def click_descriptions_field(self):
@@ -51,16 +54,16 @@ class ImagePage():
         css_style_border_color = input_field_is_active.value_of_css_property("border-color")
 
         #Отладочный вывод
-        print(f"Фактический цвет границы: '{css_style_border_color}'")
+        logger.info(f"Фактический цвет границы: '{css_style_border_color}'")
 
         #Разные возможные форматы цвета
         expected_colors = ["#e253dd", "rgb(226, 83, 221)", "rgba(226, 83, 221, 1)"]
 
         if css_style_border_color in expected_colors:
-            print("Поле ввода активно")
+            logger.info("Поле ввода активно")
             return True
         else:
-            print(f"Ошибка, поле ввода неактивно. Ожидался один из: {expected_colors}")
+            logger.info(f"Ошибка, поле ввода неактивно. Ожидался один из: {expected_colors}")
             return False
 
     def input_descriptions_query(self):
@@ -72,10 +75,10 @@ class ImagePage():
         actual_value = field_value.get_attribute("value")
 
         if actual_value == search_value:
-            print(f"В поле корректное значение: '{actual_value}'")
+            logger.info(f"В поле корректное значение: '{actual_value}'")
             return True
         else:
-            print(f"Ошибка!: '{actual_value}', ожидалось: '{search_value}'")
+            logger.info(f"Ошибка!: '{actual_value}', ожидалось: '{search_value}'")
             return False
 
     # МЕТОДЫ СКАЧИВАНИЯ
@@ -87,9 +90,9 @@ class ImagePage():
         generate_button = wait_element(self.driver, LocatorsImagePage.button_generate_image, timeout=10)
         is_disabled = generate_button.get_attribute("disabled") is not None
         if is_disabled:
-            print("Кнопка 'Сгенерировать изображение' заблокирована")
+            logger.info("Кнопка 'Сгенерировать изображение' заблокирована")
         else:
-            print("Кнопка 'Сгенерировать изображение' активна")
+            logger.info("Кнопка 'Сгенерировать изображение' активна")
         return is_disabled
 
     def check_start_generation(self):
@@ -97,10 +100,10 @@ class ImagePage():
         display_value = loading_indicator.value_of_css_property("display")
 
         if display_value == "block":
-            print("Генерация изображения начата успешно")
+            logger.info("Генерация изображения начата успешно")
             return True
         elif display_value == "none":
-            print("Генерация изображения провалилась")
+            logger.info("Генерация изображения провалилась")
             return False
 
     def click_download_button(self):
@@ -129,23 +132,23 @@ class ImagePage():
         target_dir = Path(__file__).parent.parent / "downloads"
         target_dir.mkdir(exist_ok=True)
 
-        print(f"Ищем файлы в: {downloads_dir}")
+        logger.info(f"Ищем файлы в: {downloads_dir}")
 
         def _check_and_move_file():
             current_files = list(downloads_dir.glob("*"))
-            print(f"Найдено файлов: {len(current_files)}")
+            logger.info(f"Найдено файлов: {len(current_files)}")
 
             completed_files = [f for f in current_files
                                if not f.name.endswith(('.crdownload', '.tmp', '.part'))]
-            print(f"Завершенные файлы: {[f.name for f in completed_files]}")
+            logger.info(f"Завершенные файлы: {[f.name for f in completed_files]}")
 
             image_files = [f for f in completed_files
                            if f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']]
-            print(f"Картинки: {[f.name for f in image_files]}")
+            logger.info(f"Картинки: {[f.name for f in image_files]}")
 
             if image_files:
                 newest_file = max(image_files, key=lambda f: f.stat().st_ctime)
-                print(f"Найдена картинка: {newest_file.name}")
+                logger.info(f"Найдена картинка: {newest_file.name}")
 
                 target_file = target_dir / newest_file.name
                 newest_file.rename(target_file)
