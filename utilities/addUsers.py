@@ -1,6 +1,5 @@
 from selenium.common import TimeoutException
 
-from base.initializationDriver import DriverInitialization
 from locators.locators import LocatorsAddUser
 from page.loginPage import LoginPage
 from utilities.fileOperations import email_factory, save_email
@@ -15,13 +14,12 @@ class AddUser():
         # Проверка на исключение регистрации существующего пользователя
         try:
             # Ищем сообщение о существующем пользователе
-            error_message = DriverInitialization.wait_element(self.driver, LocatorsAddUser.error_locator)
+            error_message = self.driver.wait_element(self.driver, LocatorsAddUser.error_locator)
             print("Пользователь уже существует!")
             self.driver.quit()
 
             # Пытаемся авторизоваться
-            driver = DriverInitialization().initialization()
-            login_page = LoginPage(driver)
+            login_page = LoginPage(self.driver)
             if login_page.login():
                 email = email_factory()
                 save_email(email)

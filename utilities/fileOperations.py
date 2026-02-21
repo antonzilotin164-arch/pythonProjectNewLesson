@@ -1,14 +1,14 @@
 import re
 from base.globalVariables import base_email
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+FILE_PATH = PROJECT_ROOT / "list_email.txt"
 
 def load_all_emails():
     """Загружаем всю почту из файла"""
-    try:
-        with open('list_email.txt', 'r') as file:
-            return file.read().splitlines()
-    except FileNotFoundError:
-        return []
+    with open(FILE_PATH, 'r') as file:
+        return file.read().splitlines()
 
 
 def email_factory():
